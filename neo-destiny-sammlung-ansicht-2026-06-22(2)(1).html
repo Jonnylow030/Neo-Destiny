@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neo Destiny — Sammlungsübersicht</title>
+<style>
+:root{--bg:#0b0d12;--panel:#161a24;--panel-2:#1c212f;--border:#262c3b;--text:#e9ebf1;--text-dim:#9aa1b4;--text-faint:#5d6379;--accent:#c9a8ff;--accent-2:#ffd166;--good:#4ade80;--bad:#f87171;}
+*{box-sizing:border-box;}body{margin:0;background:radial-gradient(1200px 800px at 10% -10%,#1a1430 0%,transparent 60%),radial-gradient(1200px 800px at 110% 10%,#0d2233 0%,transparent 55%),var(--bg);color:var(--text);font-family:'Segoe UI',Roboto,Arial,sans-serif;padding-bottom:50px;}
+header{padding:28px 16px 16px;text-align:center;}
+header h1{margin:0;font-size:clamp(24px,5vw,36px);font-weight:800;background:linear-gradient(90deg,var(--accent-2),var(--accent) 60%,#8ec5ff);-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{margin:6px 0 0;color:var(--text-dim);font-size:13px;}
+.stats-wrap{position:sticky;top:0;z-index:10;background:rgba(11,13,18,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 16px;}
+.stats{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px;}
+.progress-bar-bg{flex:1;height:10px;border-radius:6px;background:var(--panel-2);overflow:hidden;border:1px solid var(--border);}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent));border-radius:6px;}
+.stats-text{font-size:14px;font-weight:700;white-space:nowrap;}
+.filters{max-width:1100px;margin:16px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap;}
+.filters button{background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;}
+.filters button.active{background:linear-gradient(90deg,#6d4fbf,#8b6fd6);border:none;color:#fff;font-weight:600;}
+.grid{max-width:1100px;margin:16px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 8px 24px rgba(0,0,0,.35);}
+.card.owned{border-color:rgba(74,222,128,.45);}
+.card.missing{opacity:.55;}
+.card-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-dim);}
+.card-num{font-weight:700;color:var(--text);}
+.rarity-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px;}
+.r-holo{background:rgba(255,209,102,.15);color:#ffd166;border:1px solid rgba(255,209,102,.4);}
+.r-rare{background:rgba(142,197,255,.15);color:#8ec5ff;border:1px solid rgba(142,197,255,.4);}
+.r-uncommon{background:rgba(201,168,255,.15);color:#c9a8ff;border:1px solid rgba(201,168,255,.4);}
+.r-common{background:rgba(154,161,180,.15);color:#9aa1b4;border:1px solid rgba(154,161,180,.4);}
+.r-secret{background:linear-gradient(90deg,rgba(255,209,102,.2),rgba(201,168,255,.2));color:#ffe9b3;border:1px solid rgba(255,209,102,.5);}
+.img-wrap{width:100%;aspect-ratio:245/342;background:var(--panel-2);border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);}
+.img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;color:var(--text-faint);font-size:11px;gap:4px;}
+.owned-tick{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:2;}
+.owned-tick svg{width:14px;height:14px;}
+.card-name{font-size:13px;font-weight:700;line-height:1.25;min-height:32px;}
+.status-tag{font-size:11px;font-weight:700;text-align:center;padding:5px;border-radius:7px;}
+.tag-owned{background:rgba(74,222,128,.12);color:var(--good);}
+.tag-missing{background:rgba(248,113,113,.1);color:var(--bad);}
+footer{text-align:center;color:var(--text-faint);font-size:11.5px;margin-top:30px;padding:0 16px;}
+@media (max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;padding:0 10px;}header h1{font-size:22px;}}
+</style></head>
+<body>
+<header><h1>Neo Destiny</h1><p>Sammlungsübersicht · Stand: 22.6.2026</p></header>
+<div class="stats-wrap"><div class="stats">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:27%"></div></div>
+  <div class="stats-text">31 / 113 (27%)</div>
+</div></div>
+<div class="filters">
+  <button class="active" data-f="all" onclick="setFilter('all',this)">Alle</button>
+  <button data-f="owned" onclick="setFilter('owned',this)">Nur vorhanden</button>
+  <button data-f="missing" onclick="setFilter('missing',this)">Nur fehlend</button>
+</div>
+<div class="grid" id="grid"><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#1</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/1.png" alt="Dark Ampharos" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/1/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#1</div><div>Dark Ampharos</div></div>
+      </div>
+      <div class="card-name">Dark Ampharos</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#2</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/2.png" alt="Dark Crobat" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/2/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#2</div><div>Dark Crobat</div></div>
+      </div>
+      <div class="card-name">Dark Crobat</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#3</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/3.png" alt="Dark Donphan" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/3/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#3</div><div>Dark Donphan</div></div>
+      </div>
+      <div class="card-name">Dark Donphan</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#4</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/4.png" alt="Dark Espeon" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/4/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#4</div><div>Dark Espeon</div></div>
+      </div>
+      <div class="card-name">Dark Espeon</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#5</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/5.png" alt="Dark Feraligatr" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/5/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#5</div><div>Dark Feraligatr</div></div>
+      </div>
+      <div class="card-name">Dark Feraligatr</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#6</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/6.png" alt="Dark Gengar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/6/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#6</div><div>Dark Gengar</div></div>
+      </div>
+      <div class="card-name">Dark Gengar</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#7</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/7.png" alt="Dark Houndoom" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/7/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#7</div><div>Dark Houndoom</div></div>
+      </div>
+      <div class="card-name">Dark Houndoom</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#8</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/8.png" alt="Dark Porygon2" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/8/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#8</div><div>Dark Porygon2</div></div>
+      </div>
+      <div class="card-name">Dark Porygon2</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#9</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/9.png" alt="Dark Scizor" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/9/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#9</div><div>Dark Scizor</div></div>
+      </div>
+      <div class="card-name">Dark Scizor</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#10</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/10.png" alt="Dark Typhlosion" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/10/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#10</div><div>Dark Typhlosion</div></div>
+      </div>
+      <div class="card-name">Dark Typhlosion</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#11</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/11.png" alt="Dark Tyranitar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/11/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#11</div><div>Dark Tyranitar</div></div>
+      </div>
+      <div class="card-name">Dark Tyranitar</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#12</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/12.png" alt="Light Arcanine" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/12/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#12</div><div>Light Arcanine</div></div>
+      </div>
+      <div class="card-name">Light Arcanine</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#13</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/13.png" alt="Light Azumarill" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/13/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#13</div><div>Light Azumarill</div></div>
+      </div>
+      <div class="card-name">Light Azumarill</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#14</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/14.png" alt="Light Dragonite" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/14/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#14</div><div>Light Dragonite</div></div>
+      </div>
+      <div class="card-name">Light Dragonite</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#15</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/15.png" alt="Light Togetic" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/15/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#15</div><div>Light Togetic</div></div>
+      </div>
+      <div class="card-name">Light Togetic</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#16</span><span class="rarity-badge r-holo">Holo Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/16.png" alt="Miracle Energy" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/16/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#16</div><div>Miracle Energy</div></div>
+      </div>
+      <div class="card-name">Miracle Energy</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#17</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/17.png" alt="Dark Ariados" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/17/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#17</div><div>Dark Ariados</div></div>
+      </div>
+      <div class="card-name">Dark Ariados</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#18</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/18.png" alt="Dark Magcargo" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/18/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#18</div><div>Dark Magcargo</div></div>
+      </div>
+      <div class="card-name">Dark Magcargo</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#19</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/19.png" alt="Dark Omastar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/19/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#19</div><div>Dark Omastar</div></div>
+      </div>
+      <div class="card-name">Dark Omastar</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#20</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/20.png" alt="Dark Slowking" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/20/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#20</div><div>Dark Slowking</div></div>
+      </div>
+      <div class="card-name">Dark Slowking</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#21</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/21.png" alt="Dark Ursaring" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/21/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#21</div><div>Dark Ursaring</div></div>
+      </div>
+      <div class="card-name">Dark Ursaring</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#22</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/22.png" alt="Light Dragonair" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/22/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#22</div><div>Light Dragonair</div></div>
+      </div>
+      <div class="card-name">Light Dragonair</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#23</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/23.png" alt="Light Lanturn" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/23/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#23</div><div>Light Lanturn</div></div>
+      </div>
+      <div class="card-name">Light Lanturn</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#24</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/24.png" alt="Light Ledian" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/24/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#24</div><div>Light Ledian</div></div>
+      </div>
+      <div class="card-name">Light Ledian</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#25</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/25.png" alt="Light Machamp" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/25/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#25</div><div>Light Machamp</div></div>
+      </div>
+      <div class="card-name">Light Machamp</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#26</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/26.png" alt="Light Piloswine" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/26/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#26</div><div>Light Piloswine</div></div>
+      </div>
+      <div class="card-name">Light Piloswine</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#27</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/27.png" alt="Unown G" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/27/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#27</div><div>Unown G</div></div>
+      </div>
+      <div class="card-name">Unown G</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#28</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/28.png" alt="Unown H" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/28/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#28</div><div>Unown H</div></div>
+      </div>
+      <div class="card-name">Unown H</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#29</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/29.png" alt="Unown W" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/29/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#29</div><div>Unown W</div></div>
+      </div>
+      <div class="card-name">Unown W</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#30</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/30.png" alt="Unown X" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/30/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#30</div><div>Unown X</div></div>
+      </div>
+      <div class="card-name">Unown X</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#31</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/31.png" alt="Chansey" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/31/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#31</div><div>Chansey</div></div>
+      </div>
+      <div class="card-name">Chansey</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#32</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/32.png" alt="Dark Croconaw" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/32/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#32</div><div>Dark Croconaw</div></div>
+      </div>
+      <div class="card-name">Dark Croconaw</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#33</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/33.png" alt="Dark Exeggutor" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/33/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#33</div><div>Dark Exeggutor</div></div>
+      </div>
+      <div class="card-name">Dark Exeggutor</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#34</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/34.png" alt="Dark Flaaffy" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/34/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#34</div><div>Dark Flaaffy</div></div>
+      </div>
+      <div class="card-name">Dark Flaaffy</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#35</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/35.png" alt="Dark Forretress" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/35/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#35</div><div>Dark Forretress</div></div>
+      </div>
+      <div class="card-name">Dark Forretress</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#36</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/36.png" alt="Dark Haunter" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/36/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#36</div><div>Dark Haunter</div></div>
+      </div>
+      <div class="card-name">Dark Haunter</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#37</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/37.png" alt="Dark Omanyte" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/37/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#37</div><div>Dark Omanyte</div></div>
+      </div>
+      <div class="card-name">Dark Omanyte</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#38</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/38.png" alt="Dark Pupitar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/38/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#38</div><div>Dark Pupitar</div></div>
+      </div>
+      <div class="card-name">Dark Pupitar</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#39</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/39.png" alt="Dark Quilava" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/39/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#39</div><div>Dark Quilava</div></div>
+      </div>
+      <div class="card-name">Dark Quilava</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#40</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/40.png" alt="Dark Wigglytuff" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/40/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#40</div><div>Dark Wigglytuff</div></div>
+      </div>
+      <div class="card-name">Dark Wigglytuff</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#41</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/41.png" alt="Heracross" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/41/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#41</div><div>Heracross</div></div>
+      </div>
+      <div class="card-name">Heracross</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#42</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/42.png" alt="Hitmonlee" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/42/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#42</div><div>Hitmonlee</div></div>
+      </div>
+      <div class="card-name">Hitmonlee</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#43</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/43.png" alt="Houndour" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/43/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#43</div><div>Houndour</div></div>
+      </div>
+      <div class="card-name">Houndour</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#44</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/44.png" alt="Jigglypuff" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/44/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#44</div><div>Jigglypuff</div></div>
+      </div>
+      <div class="card-name">Jigglypuff</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#45</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/45.png" alt="Light Dewgong" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/45/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#45</div><div>Light Dewgong</div></div>
+      </div>
+      <div class="card-name">Light Dewgong</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#46</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/46.png" alt="Light Flareon" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/46/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#46</div><div>Light Flareon</div></div>
+      </div>
+      <div class="card-name">Light Flareon</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#47</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/47.png" alt="Light Golduck" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/47/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#47</div><div>Light Golduck</div></div>
+      </div>
+      <div class="card-name">Light Golduck</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#48</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/48.png" alt="Light Jolteon" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/48/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#48</div><div>Light Jolteon</div></div>
+      </div>
+      <div class="card-name">Light Jolteon</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#49</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/49.png" alt="Light Machoke" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/49/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#49</div><div>Light Machoke</div></div>
+      </div>
+      <div class="card-name">Light Machoke</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#50</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/50.png" alt="Light Ninetales" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/50/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#50</div><div>Light Ninetales</div></div>
+      </div>
+      <div class="card-name">Light Ninetales</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#51</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/51.png" alt="Light Slowbro" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/51/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#51</div><div>Light Slowbro</div></div>
+      </div>
+      <div class="card-name">Light Slowbro</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#52</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/52.png" alt="Light Vaporeon" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/52/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#52</div><div>Light Vaporeon</div></div>
+      </div>
+      <div class="card-name">Light Vaporeon</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#53</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/53.png" alt="Light Venomoth" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/53/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#53</div><div>Light Venomoth</div></div>
+      </div>
+      <div class="card-name">Light Venomoth</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#54</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/54.png" alt="Light Wigglytuff" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/54/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#54</div><div>Light Wigglytuff</div></div>
+      </div>
+      <div class="card-name">Light Wigglytuff</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#55</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/55.png" alt="Scyther" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/55/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#55</div><div>Scyther</div></div>
+      </div>
+      <div class="card-name">Scyther</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#56</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/56.png" alt="Togepi" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/56/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#56</div><div>Togepi</div></div>
+      </div>
+      <div class="card-name">Togepi</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#57</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/57.png" alt="Unown C" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/57/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#57</div><div>Unown C</div></div>
+      </div>
+      <div class="card-name">Unown C</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#58</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/58.png" alt="Unown P" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/58/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#58</div><div>Unown P</div></div>
+      </div>
+      <div class="card-name">Unown P</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#59</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/59.png" alt="Unown Q" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/59/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#59</div><div>Unown Q</div></div>
+      </div>
+      <div class="card-name">Unown Q</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#60</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/60.png" alt="Unown Z" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/60/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#60</div><div>Unown Z</div></div>
+      </div>
+      <div class="card-name">Unown Z</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#61</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/61.png" alt="Cyndaquil" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/61/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#61</div><div>Cyndaquil</div></div>
+      </div>
+      <div class="card-name">Cyndaquil</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#62</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/62.png" alt="Dark Octillery" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/62/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#62</div><div>Dark Octillery</div></div>
+      </div>
+      <div class="card-name">Dark Octillery</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#63</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/63.png" alt="Dratini" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/63/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#63</div><div>Dratini</div></div>
+      </div>
+      <div class="card-name">Dratini</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#64</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/64.png" alt="Exeggcute" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/64/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#64</div><div>Exeggcute</div></div>
+      </div>
+      <div class="card-name">Exeggcute</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#65</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/65.png" alt="Gastly" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/65/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#65</div><div>Gastly</div></div>
+      </div>
+      <div class="card-name">Gastly</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#66</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/66.png" alt="Girafarig" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/66/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#66</div><div>Girafarig</div></div>
+      </div>
+      <div class="card-name">Girafarig</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#67</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/67.png" alt="Gligar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/67/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#67</div><div>Gligar</div></div>
+      </div>
+      <div class="card-name">Gligar</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#68</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/68.png" alt="Growlithe" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/68/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#68</div><div>Growlithe</div></div>
+      </div>
+      <div class="card-name">Growlithe</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#69</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/69.png" alt="Hitmonchan" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/69/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#69</div><div>Hitmonchan</div></div>
+      </div>
+      <div class="card-name">Hitmonchan</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#70</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/70.png" alt="Larvitar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/70/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#70</div><div>Larvitar</div></div>
+      </div>
+      <div class="card-name">Larvitar</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#71</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/71.png" alt="Ledyba" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/71/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#71</div><div>Ledyba</div></div>
+      </div>
+      <div class="card-name">Ledyba</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#72</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/72.png" alt="Light Sunflora" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/72/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#72</div><div>Light Sunflora</div></div>
+      </div>
+      <div class="card-name">Light Sunflora</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#73</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/73.png" alt="Machop" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/73/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#73</div><div>Machop</div></div>
+      </div>
+      <div class="card-name">Machop</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#74</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/74.png" alt="Mantine" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/74/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#74</div><div>Mantine</div></div>
+      </div>
+      <div class="card-name">Mantine</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#75</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/75.png" alt="Mareep" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/75/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#75</div><div>Mareep</div></div>
+      </div>
+      <div class="card-name">Mareep</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#76</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/76.png" alt="Phanpy" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/76/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#76</div><div>Phanpy</div></div>
+      </div>
+      <div class="card-name">Phanpy</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#77</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/77.png" alt="Pineco" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/77/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#77</div><div>Pineco</div></div>
+      </div>
+      <div class="card-name">Pineco</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#78</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/78.png" alt="Porygon" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/78/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#78</div><div>Porygon</div></div>
+      </div>
+      <div class="card-name">Porygon</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#79</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/79.png" alt="Psyduck" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/79/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#79</div><div>Psyduck</div></div>
+      </div>
+      <div class="card-name">Psyduck</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#80</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/80.png" alt="Remoraid" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/80/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#80</div><div>Remoraid</div></div>
+      </div>
+      <div class="card-name">Remoraid</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#81</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/81.png" alt="Seel" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/81/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#81</div><div>Seel</div></div>
+      </div>
+      <div class="card-name">Seel</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#82</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/82.png" alt="Slugma" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/82/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#82</div><div>Slugma</div></div>
+      </div>
+      <div class="card-name">Slugma</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#83</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/83.png" alt="Sunkern" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/83/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#83</div><div>Sunkern</div></div>
+      </div>
+      <div class="card-name">Sunkern</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#84</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/84.png" alt="Swinub" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/84/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#84</div><div>Swinub</div></div>
+      </div>
+      <div class="card-name">Swinub</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#85</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/85.png" alt="Totodile" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/85/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#85</div><div>Totodile</div></div>
+      </div>
+      <div class="card-name">Totodile</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#86</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/86.png" alt="Unown L" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/86/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#86</div><div>Unown L</div></div>
+      </div>
+      <div class="card-name">Unown L</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#87</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/87.png" alt="Unown S" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/87/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#87</div><div>Unown S</div></div>
+      </div>
+      <div class="card-name">Unown S</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#88</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/88.png" alt="Unown T" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/88/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#88</div><div>Unown T</div></div>
+      </div>
+      <div class="card-name">Unown T</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#89</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/89.png" alt="Unown V" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/89/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#89</div><div>Unown V</div></div>
+      </div>
+      <div class="card-name">Unown V</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#90</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/90.png" alt="Venonat" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/90/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#90</div><div>Venonat</div></div>
+      </div>
+      <div class="card-name">Venonat</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#91</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/91.png" alt="Vulpix" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/91/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#91</div><div>Vulpix</div></div>
+      </div>
+      <div class="card-name">Vulpix</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#92</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/92.png" alt="Broken Ground Gym" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/92/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#92</div><div>Broken Ground Gym</div></div>
+      </div>
+      <div class="card-name">Broken Ground Gym</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#93</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/93.png" alt="EXP. ALL" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/93/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#93</div><div>EXP. ALL</div></div>
+      </div>
+      <div class="card-name">EXP. ALL</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#94</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/94.png" alt="Imposter Professor Oak's Invention" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/94/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#94</div><div>Imposter Professor Oak's Invention</div></div>
+      </div>
+      <div class="card-name">Imposter Professor Oak's Invention</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#95</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/95.png" alt="Radio Tower" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/95/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#95</div><div>Radio Tower</div></div>
+      </div>
+      <div class="card-name">Radio Tower</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#96</span><span class="rarity-badge r-rare">Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/96.png" alt="Thought Wave Machine" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/96/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#96</div><div>Thought Wave Machine</div></div>
+      </div>
+      <div class="card-name">Thought Wave Machine</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#97</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/97.png" alt="Counterattack Claws" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/97/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#97</div><div>Counterattack Claws</div></div>
+      </div>
+      <div class="card-name">Counterattack Claws</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#98</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/98.png" alt="Energy Amplifier" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/98/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#98</div><div>Energy Amplifier</div></div>
+      </div>
+      <div class="card-name">Energy Amplifier</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#99</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/99.png" alt="Energy Stadium" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/99/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#99</div><div>Energy Stadium</div></div>
+      </div>
+      <div class="card-name">Energy Stadium</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#100</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/100.png" alt="Lucky Stadium" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/100/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#100</div><div>Lucky Stadium</div></div>
+      </div>
+      <div class="card-name">Lucky Stadium</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#101</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/101.png" alt="Magnifier" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/101/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#101</div><div>Magnifier</div></div>
+      </div>
+      <div class="card-name">Magnifier</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#102</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/102.png" alt="Pokemon Personality Test" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/102/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#102</div><div>Pokemon Personality Test</div></div>
+      </div>
+      <div class="card-name">Pokemon Personality Test</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#103</span><span class="rarity-badge r-uncommon">Uncommon</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/103.png" alt="Team Rocket's Evil Deeds" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/103/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#103</div><div>Team Rocket's Evil Deeds</div></div>
+      </div>
+      <div class="card-name">Team Rocket's Evil Deeds</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#104</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/104.png" alt="Heal Powder" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/104/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#104</div><div>Heal Powder</div></div>
+      </div>
+      <div class="card-name">Heal Powder</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#105</span><span class="rarity-badge r-common">Common</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/105.png" alt="Mail from Bill" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/105/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#105</div><div>Mail from Bill</div></div>
+      </div>
+      <div class="card-name">Mail from Bill</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#106</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/106.png" alt="Shining Celebi" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/106/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#106</div><div>Shining Celebi</div></div>
+      </div>
+      <div class="card-name">Shining Celebi</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#107</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/107.png" alt="Shining Charizard" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/107/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#107</div><div>Shining Charizard</div></div>
+      </div>
+      <div class="card-name">Shining Charizard</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#108</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/108.png" alt="Shining Kabutops" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/108/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#108</div><div>Shining Kabutops</div></div>
+      </div>
+      <div class="card-name">Shining Kabutops</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#109</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/109.png" alt="Shining Mewtwo" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/109/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#109</div><div>Shining Mewtwo</div></div>
+      </div>
+      <div class="card-name">Shining Mewtwo</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#110</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/110.png" alt="Shining Noctowl" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/110/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#110</div><div>Shining Noctowl</div></div>
+      </div>
+      <div class="card-name">Shining Noctowl</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#111</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/111.png" alt="Shining Raichu" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/111/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#111</div><div>Shining Raichu</div></div>
+      </div>
+      <div class="card-name">Shining Raichu</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div><div class="card owned" data-owned="1">
+      <div class="card-top"><span class="card-num">#112</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/112.png" alt="Shining Steelix" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/112/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#112</div><div>Shining Steelix</div></div>
+      </div>
+      <div class="card-name">Shining Steelix</div>
+      <div class="status-tag tag-owned">Vorhanden ✓</div>
+    </div><div class="card missing" data-owned="0">
+      <div class="card-top"><span class="card-num">#113</span><span class="rarity-badge r-secret">Secret Rare</span></div>
+      <div class="img-wrap">
+        <div class="owned-tick" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        <img src="https://images.pokemontcg.io/neo4/113.png" alt="Shining Tyranitar" loading="lazy" data-fallback-tried="0" data-fallback-url="https://assets.tcgdex.net/en/neo/neo4/113/high.png" onerror="handleImgError(this)">
+        <div class="img-fallback"><div class="num">#113</div><div>Shining Tyranitar</div></div>
+      </div>
+      <div class="card-name">Shining Tyranitar</div>
+      <div class="status-tag tag-missing">Fehlt</div>
+    </div></div>
+<footer>Diese Übersicht zeigt nur, welche Karten vorhanden sind — Preise und private Notizen wurden nicht mit übertragen.</footer>
+<script>
+function handleImgError(img){
+  const tried = parseInt(img.dataset.fallbackTried || "0");
+  if(tried === 0){ img.dataset.fallbackTried = "1"; img.src = img.dataset.fallbackUrl; }
+  else { img.style.display='none'; img.nextElementSibling.style.display='flex'; }
+}
+function setFilter(f, btn){
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#grid .card').forEach(c=>{
+    if(f==='all'){ c.style.display=''; }
+    else if(f==='owned'){ c.style.display = c.dataset.owned==='1' ? '' : 'none'; }
+    else { c.style.display = c.dataset.owned==='0' ? '' : 'none'; }
+  });
+}
+</script>
+</body></html>
