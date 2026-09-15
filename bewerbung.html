@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bewerbung — PW Freetrans LoL</title>
+<meta name="description" content="Bewirb dich bei PW Freetrans LoL, unserer deutschen Allianz-Gilde für World of Warcraft Forever.">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.svg" alt="PW Freetrans LoL Logo">
+      <div class="brand-text">
+        <h1>PW Freetrans LoL</h1>
+        <p>Allianz-Gilde · World of Warcraft Forever</p>
+      </div>
+    </a>
+    <nav class="main-nav">
+      <a class="nav-btn" href="index.html">Startseite</a>
+      <a class="nav-btn" href="kader.html">Unser Kader</a>
+      <a class="nav-btn active" href="bewerbung.html">Bewerbung</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="page-head">
+    <h2>Bewerbung</h2>
+    <p>
+      Du möchtest Teil von PW Freetrans LoL werden? Fülle das Formular aus,
+      wir melden uns bei dir.
+    </p>
+  </section>
+
+  <section class="form-wrap">
+    <div class="form-status" id="formStatus"></div>
+    <form id="bewerbungForm" novalidate>
+      <div class="form-row two-col">
+        <div>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+          <label for="age">Alter</label>
+          <input type="number" id="age" name="age" min="1" max="120" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="email">E-Mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-row two-col">
+        <div>
+          <label for="klasse">Klasse</label>
+          <select id="klasse" name="klasse" required>
+            <option value="" disabled selected>Bitte wählen</option>
+            <option>Krieger</option>
+            <option>Paladin</option>
+            <option>Jäger</option>
+            <option>Schurke</option>
+            <option>Priester</option>
+            <option>Schamane</option>
+            <option>Magier</option>
+            <option>Hexenmeister</option>
+            <option>Druide</option>
+            <option>Noch unsicher</option>
+          </select>
+        </div>
+        <div>
+          <label for="specc">Specc</label>
+          <select id="specc" name="specc" required>
+            <option value="" disabled selected>Bitte wählen</option>
+            <option>Tank</option>
+            <option>Heal</option>
+            <option>DPS</option>
+            <option>Hybrid</option>
+            <option>Noch unsicher</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="text">Deine Bewerbung</label>
+        <textarea id="text" name="text" placeholder="Erzähl uns etwas über dich, deine WoW-Erfahrung und warum du zu uns passt." required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Bewerbung absenden</button>
+      <p class="form-note">
+        Beim Absenden öffnet sich dein E-Mail-Programm mit einer vorausgefüllten
+        Bewerbung an unser Gilden-Postfach.
+      </p>
+    </form>
+  </section>
+</main>
+
+<footer class="site-footer">
+  &copy; 2026 PW Freetrans LoL — Allianz-Gilde für World of Warcraft Forever
+</footer>
+
+<script src="assets/js/bewerbung.js"></script>
+</body>
+</html>
