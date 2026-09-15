@@ -9,13 +9,14 @@ const CLASS_COLORS = {
   "Magier": "#69CCF0",
   "Hexenmeister": "#9482C9",
   "Druide": "#FF7D0A",
-  "TBD": "#7d8494"
+  "Noch nicht entschieden": "#7d8494"
 };
 
 // Reihenfolge, in der alle Allianz-Klassen im Kader angezeigt werden.
 const ALL_CLASSES = [
   "Krieger", "Paladin", "Jäger", "Schurke",
-  "Priester", "Schamane", "Magier", "Hexenmeister", "Druide"
+  "Priester", "Schamane", "Magier", "Hexenmeister", "Druide",
+  "Noch nicht entschieden"
 ];
 
 // Specc-Werte: "Tank", "Heal", "DPS", "Hybrid" oder null (noch offen).
@@ -32,5 +33,5 @@ const ROSTER = [
   { name: "Philbert", class: "Magier", spec: "DPS", photo: "assets/img/players/philbert.jpg", armoryUrl: null, logsUrl: null },
   { name: "Timo", class: "Magier", spec: "DPS", photo: "assets/img/players/timo.jpg", armoryUrl: null, logsUrl: null },
   { name: "Karl", class: "Druide", spec: "Hybrid", photo: "assets/img/players/karl.jpg", armoryUrl: null, logsUrl: null },
-  { name: "Francis", class: "TBD", spec: "Heal", photo: "assets/img/players/francis.jpg", armoryUrl: null, logsUrl: null }
+  { name: "Francis", class: "Noch nicht entschieden", spec: "Heal", photo: "assets/img/players/francis.jpg", armoryUrl: null, logsUrl: null }
 ];

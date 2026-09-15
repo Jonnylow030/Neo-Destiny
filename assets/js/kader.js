@@ -32,8 +32,8 @@ function extLink(url, label, icon) {
 }
 
 function renderPlayerCard(player) {
-  const color = CLASS_COLORS[player.class] || CLASS_COLORS.TBD;
-  const className = player.class === "TBD" ? "Klasse noch offen" : player.class;
+  const color = CLASS_COLORS[player.class] || CLASS_COLORS["Noch nicht entschieden"];
+  const className = player.class;
   return `
     <article class="player-card" data-player="${player.name}">
       <div class="player-top">
@@ -114,8 +114,8 @@ function openProfile(name) {
   if (!player) return;
 
   const overlay = document.getElementById("profileOverlay");
-  const color = CLASS_COLORS[player.class] || CLASS_COLORS.TBD;
-  const className = player.class === "TBD" ? "Klasse noch offen" : player.class;
+  const color = CLASS_COLORS[player.class] || CLASS_COLORS["Noch nicht entschieden"];
+  const className = player.class;
 
   document.getElementById("profileAvatar").innerHTML = avatarHtml(player);
   document.getElementById("profileAvatar").style.background = color;
