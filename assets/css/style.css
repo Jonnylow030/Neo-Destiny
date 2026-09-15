@@ -77,11 +77,10 @@ a { color: var(--green-light); }
 }
 
 .brand img {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
   object-fit: cover;
-  border: 2px solid var(--gold);
   flex-shrink: 0;
 }
 
@@ -139,12 +138,11 @@ nav.main-nav {
 }
 
 .hero img.hero-logo {
-  width: min(220px, 60vw);
+  width: min(560px, 92vw);
   height: auto;
-  border-radius: 50%;
-  border: 3px solid var(--gold);
-  box-shadow: 0 0 40px rgba(62, 207, 110, 0.25);
-  margin-bottom: 18px;
+  border-radius: 16px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
 }
 
 .hero h2 {
