@@ -138,11 +138,12 @@ nav.main-nav {
 }
 
 .hero img.hero-logo {
-  width: 100%;
+  width: min(640px, 100%);
   height: auto;
   border-radius: 16px;
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5);
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
+  display: block;
 }
 
 .hero h2 {
@@ -159,7 +160,7 @@ nav.main-nav {
 .hero .tagline {
   color: var(--text-dim);
   font-size: 15.5px;
-  max-width: 100%;
+  max-width: 640px;
   margin: 0 auto 26px;
   line-height: 1.65;
   padding: 0 8px;
