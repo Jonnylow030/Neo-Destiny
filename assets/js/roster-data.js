@@ -22,7 +22,7 @@ const ALL_CLASSES = [
 // photo zeigt auf das Profilbild; fehlt eins, wird ein Initialen-Avatar genutzt.
 // armoryUrl / logsUrl bleiben leer, bis nach Release echte Charakterprofile existieren.
 const ROSTER = [
-  { name: "Killmann", class: "Krieger", spec: null, photo: "assets/img/players/killman.jpg", armoryUrl: null, logsUrl: null },
+  { name: "Killmann", class: "Krieger", spec: "Tank", photo: "assets/img/players/killman.jpg", armoryUrl: null, logsUrl: null },
   { name: "Bittner", class: "Priester", spec: "Heal", photo: "assets/img/players/bittner.jpg", armoryUrl: null, logsUrl: null },
   { name: "Felix", class: "Schamane", spec: "DPS", photo: "assets/img/players/felix.jpg", armoryUrl: null, logsUrl: null },
   { name: "Philipp", class: "Hexenmeister", spec: "DPS", photo: "assets/img/players/philipp.jpg", armoryUrl: null, logsUrl: null },
