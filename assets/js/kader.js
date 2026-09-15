@@ -13,8 +13,7 @@ function initials(name) {
   return name.trim().charAt(0).toUpperCase();
 }
 
-function avatarHtml(player, size) {
-  const color = CLASS_COLORS[player.class] || CLASS_COLORS.TBD;
+function avatarHtml(player) {
   if (player.photo) {
     return `<img src="${player.photo}" alt="${player.name}">`;
   }
@@ -66,68 +65,44 @@ function classCounts() {
   return counts;
 }
 
-function renderClassGrid() {
-  const grid = document.getElementById("classGrid");
-  if (!grid) return;
+function renderClassBar(key, label, color, count, playersHtml) {
+  return `
+    <details class="class-acc" name="kader-accordion" data-class="${key}">
+      <summary class="class-bar" style="--c:${color};">
+        <span class="cb-left">
+          <span class="cb-name">${label}</span>
+        </span>
+        <span class="cb-right">
+          <span class="cb-count ${count === 0 ? "empty" : ""}">${count === 0 ? "gesucht" : count + " Spieler"}</span>
+          <span class="cb-chevron">&#9662;</span>
+        </span>
+      </summary>
+      <div class="class-panel">
+        <div class="roster-grid">${playersHtml}</div>
+      </div>
+    </details>
+  `;
+}
+
+function renderAccordion() {
+  const wrap = document.getElementById("classAccordion");
+  if (!wrap) return;
   const counts = classCounts();
 
-  const allChip = `
-    <button class="class-chip class-all-chip" data-class="__all__">
-      <span class="cname">Alle</span>
-      <span class="ccount">${ROSTER.length} Spieler</span>
-    </button>
-  `;
+  const allBar = renderClassBar(
+    "__all__", "Alle Klassen", "var(--green)", ROSTER.length,
+    ROSTER.map(renderPlayerCard).join("")
+  );
 
-  const classChips = ALL_CLASSES.map((cls) => {
+  const classBars = ALL_CLASSES.map((cls) => {
     const color = CLASS_COLORS[cls];
     const count = counts[cls];
-    const emptyClass = count === 0 ? "empty" : "";
-    return `
-      <button class="class-chip ${emptyClass}" data-class="${cls}">
-        <span class="swatch" style="background:${color};"></span>
-        <span class="cname" style="color:${color};">${cls}</span>
-        <span class="ccount">${count === 0 ? "gesucht" : count + " Spieler"}</span>
-      </button>
-    `;
+    const players = ROSTER.filter((p) => p.class === cls);
+    const playersHtml = players.length ? players.map(renderPlayerCard).join("") : renderRecruitCard(cls);
+    return renderClassBar(cls, cls, color, count, playersHtml);
   }).join("");
 
-  grid.innerHTML = allChip + classChips;
-}
-
-function renderRoster(filterClass) {
-  const grid = document.getElementById("rosterGrid");
-  const empty = document.getElementById("rosterEmpty");
-  if (!grid) return;
-
-  if (!filterClass) {
-    grid.innerHTML = "";
-    grid.style.display = "none";
-    if (empty) empty.style.display = "block";
-    return;
-  }
-
-  if (empty) empty.style.display = "none";
-  grid.style.display = "grid";
-
-  let players;
-  if (filterClass === "__all__") {
-    players = ROSTER;
-  } else {
-    players = ROSTER.filter((p) => p.class === filterClass);
-  }
-
-  if (players.length === 0) {
-    grid.innerHTML = renderRecruitCard(filterClass);
-    return;
-  }
-
-  grid.innerHTML = players.map(renderPlayerCard).join("");
-}
-
-function setActiveChip(filterClass) {
-  document.querySelectorAll(".class-chip").forEach((chip) => {
-    chip.classList.toggle("active", chip.dataset.class === filterClass);
-  });
+  wrap.innerHTML = allBar + classBars;
 }
 
 function openProfile(name) {
@@ -158,23 +133,15 @@ function closeProfile() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const grid = document.getElementById("rosterGrid");
-  if (!grid) return;
+  const wrap = document.getElementById("classAccordion");
+  if (!wrap) return;
 
-  renderClassGrid();
-  renderRoster(null);
+  renderAccordion();
 
-  document.getElementById("classGrid").addEventListener("click", (e) => {
-    const chip = e.target.closest(".class-chip");
-    if (!chip) return;
-    const cls = chip.dataset.class;
-    setActiveChip(cls);
-    renderRoster(cls);
-  });
-
-  grid.addEventListener("click", (e) => {
+  wrap.addEventListener("click", (e) => {
     const card = e.target.closest(".player-card[data-player]");
     if (!card) return;
+    e.preventDefault();
     openProfile(card.dataset.player);
   });
 
