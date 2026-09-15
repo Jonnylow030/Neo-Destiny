@@ -159,7 +159,7 @@ nav.main-nav {
 .hero .tagline {
   color: var(--text-dim);
   font-size: 15.5px;
-  max-width: 620px;
+  max-width: 100%;
   margin: 0 auto 26px;
   line-height: 1.65;
   padding: 0 8px;
@@ -638,6 +638,7 @@ footer.site-footer {
   .hero { padding: 28px 0 20px; }
   .hero img.hero-logo { width: min(560px, 92vw); margin-left: auto; margin-right: auto; }
   .countdown-wrap { max-width: 620px; }
+  .hero .tagline { max-width: 620px; }
   .class-bar { padding: 13px 14px; }
   .cb-name { font-size: 14px; }
   .cb-count { font-size: 11px; }
