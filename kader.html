@@ -6,6 +6,9 @@
 <title>Unser Kader — PW Freetrans LoL</title>
 <meta name="description" content="Der Kader von PW Freetrans LoL: Klasse, Specc und Profile unserer Mitglieder für World of Warcraft Forever.">
 <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -13,7 +16,7 @@
 <header class="site-header">
   <div class="container">
     <a class="brand" href="index.html">
-      <img src="assets/img/logo.svg" alt="PW Freetrans LoL Logo">
+      <img src="assets/img/logo.jpg" alt="PW Freetrans LoL Logo">
       <div class="brand-text">
         <h1>PW Freetrans LoL</h1>
         <p>Allianz-Gilde · World of Warcraft Forever</p>
@@ -31,13 +34,33 @@
   <section class="page-head">
     <h2>Unser WoW Forever Kader</h2>
     <p>
-      Aktuell <span id="rosterCount">–</span> Mitglieder. Armory- und Warcraft-Logs-Profile werden
-      verlinkt, sobald die entsprechenden Charaktere nach Release existieren.
+      Wähle eine Klasse, um die jeweiligen Spieler zu sehen. Armory- und Warcraft-Logs-Profile
+      werden verlinkt, sobald die entsprechenden Charaktere nach Release existieren.
     </p>
   </section>
 
-  <section class="roster-grid" id="rosterGrid"></section>
+  <section class="class-grid" id="classGrid"></section>
+
+  <section class="roster-section">
+    <p class="roster-empty" id="rosterEmpty">Wähle oben eine Klasse aus, um die Spieler anzuzeigen.</p>
+    <div class="roster-grid" id="rosterGrid"></div>
+  </section>
 </main>
+
+<div class="modal-overlay" id="profileOverlay">
+  <div class="profile-modal">
+    <button class="modal-close" id="modalClose" aria-label="Schließen">✕</button>
+    <div class="profile-head">
+      <div class="profile-avatar" id="profileAvatar"></div>
+      <div>
+        <div class="profile-name" id="profileName"></div>
+        <div class="profile-class" id="profileClass"></div>
+      </div>
+      <div id="profileSpec"></div>
+    </div>
+    <div class="profile-links" id="profileLinks"></div>
+  </div>
+</div>
 
 <footer class="site-footer">
   &copy; 2026 PW Freetrans LoL — Allianz-Gilde für World of Warcraft Forever
