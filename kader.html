@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=14">
+<link rel="stylesheet" href="assets/css/style.css?v=15">
 </head>
 <body>
 
@@ -22,10 +22,14 @@
         <p>Allianz-Gilde · World of Warcraft Forever</p>
       </div>
     </a>
-    <nav class="main-nav">
+    <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-expanded="false">
+      <span class="menu-icon">☰</span>
+    </button>
+    <nav class="main-nav" id="mainNav">
       <a class="nav-btn" href="index.html">Startseite</a>
       <a class="nav-btn active" href="kader.html">Unser Kader</a>
       <a class="nav-btn" href="bewerbung.html">Bewerbung</a>
+      <button class="menu-close-text" id="menuCloseText">Menü schließen</button>
     </nav>
   </div>
 </header>
@@ -61,7 +65,8 @@
   &copy; 2026 PW Freetrans LoL — Allianz-Gilde für World of Warcraft Forever
 </footer>
 
-<script src="assets/js/roster-data.js?v=14"></script>
-<script src="assets/js/kader.js?v=14"></script>
+<script src="assets/js/nav.js?v=15"></script>
+<script src="assets/js/roster-data.js?v=15"></script>
+<script src="assets/js/kader.js?v=15"></script>
 </body>
 </html>
