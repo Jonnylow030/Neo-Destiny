@@ -357,6 +357,7 @@ nav.main-nav {
 }
 
 .player-card:hover { border-color: var(--gold); }
+.player-card:active { border-color: var(--gold); background: var(--panel-2); }
 
 .player-top { display: flex; align-items: center; gap: 12px; }
 
@@ -377,11 +378,29 @@ nav.main-nav {
 
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.player-name-wrap { min-width: 0; }
+.player-name-wrap { min-width: 0; flex: 1; }
 .player-name { font-size: 15.5px; font-weight: 700; }
 .player-class { font-size: 12px; font-weight: 700; }
 
-.badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.card-chevron {
+  flex-shrink: 0;
+  color: var(--text-faint);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.badge-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+.card-hint {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--green-light);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
 .spec-badge {
   font-size: 10.5px;

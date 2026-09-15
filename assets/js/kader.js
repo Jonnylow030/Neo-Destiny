@@ -42,8 +42,12 @@ function renderPlayerCard(player) {
           <div class="player-name">${player.name}</div>
           <div class="player-class" style="color:${color};">${className}</div>
         </div>
+        <span class="card-chevron">&rsaquo;</span>
       </div>
-      <div class="badge-row">${specBadge(player.spec)}</div>
+      <div class="badge-row">
+        ${specBadge(player.spec)}
+        <span class="card-hint">Profil ansehen &rarr;</span>
+      </div>
     </article>
   `;
 }
