@@ -69,7 +69,16 @@ function classCounts() {
   return counts;
 }
 
-function renderClassBar(key, label, color, count, playersHtml) {
+// Rollen-Filter (Specc), unabhängig von der Klassen-Filterung oben.
+const ROLE_FILTERS = [
+  { key: "Tank", label: "Tank", color: "#4a90d9" },
+  { key: "Heal", label: "Heiler", color: "#3ecf8e" },
+  { key: "DPS", label: "DPS", color: "#e5484d" },
+  { key: "Hybrid", label: "Hybrid", color: "#b98fe0" },
+  { key: "TBD", label: "Noch nicht entschieden", color: "#7d8494" }
+];
+
+function renderClassBar(key, label, color, count, playersHtml, emptyText) {
   return `
     <details class="class-acc" name="kader-accordion" data-class="${key}">
       <summary class="class-bar" style="--c:${color};">
@@ -77,7 +86,7 @@ function renderClassBar(key, label, color, count, playersHtml) {
           <span class="cb-name">${label}</span>
         </span>
         <span class="cb-right">
-          <span class="cb-count ${count === 0 ? "empty" : ""}">${count === 0 ? "gesucht" : count + " Spieler"}</span>
+          <span class="cb-count ${count === 0 ? "empty" : ""}">${count === 0 ? (emptyText || "gesucht") : count + " Spieler"}</span>
           <span class="cb-chevron">&#9662;</span>
         </span>
       </summary>
@@ -106,7 +115,19 @@ function renderAccordion() {
     return renderClassBar(cls, cls, color, count, playersHtml);
   }).join("");
 
-  wrap.innerHTML = allBar + classBars;
+  const roleHeading = `<div class="accordion-divider">Nach Rolle filtern</div>`;
+
+  const roleBars = ROLE_FILTERS.map(({ key, label, color }) => {
+    const players = key === "TBD"
+      ? ROSTER.filter((p) => !p.spec)
+      : ROSTER.filter((p) => p.spec === key);
+    const playersHtml = players.length
+      ? players.map(renderPlayerCard).join("")
+      : `<p class="roster-empty">Aktuell niemand mit dieser Rolle im Kader.</p>`;
+    return renderClassBar(`role-${key}`, label, color, players.length, playersHtml, "0 Spieler");
+  }).join("");
+
+  wrap.innerHTML = allBar + classBars + roleHeading + roleBars;
 }
 
 function openProfile(name) {
